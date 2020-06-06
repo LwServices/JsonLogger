@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<log4net
+
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <appender name="FileAppender" type="log4net.Appender.FileAppender">
+    <file type="log4net.Util.PatternString" value="JsonFormatLogFile.log" />
+    <threshold value="DEBUG" />
+    <appendToFile value="false" />
+    <lockingModel type="log4net.Appender.FileAppender+MinimalLock" />
+    <layout type="JsonLogger.JsonLayout, JsonLogger">
+    </layout>
+  </appender>
+
+  <root>
+    <appender-ref ref="FileAppender" />
+  </root>
+</log4net>
