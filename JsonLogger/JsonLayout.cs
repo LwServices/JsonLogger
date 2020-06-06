@@ -16,13 +16,19 @@ namespace JsonLogger
     {
         private static readonly string ProcessSessionId = Guid.NewGuid().ToString();
         private static readonly int ProcessId = Process.GetCurrentProcess().Id;
-        private static readonly string MachineName = Environment.MachineName;
 
         public override void ActivateOptions()
         {
         }
 
-        public override void Format(TextWriter writer, LoggingEvent e)
+        public override void Format(TextWriter writer, LoggingEvent loggingEvent)
+        {
+            loggingEvent.Fix = FixFlags.All;
+            var json = FormatJson(loggingEvent);
+            writer.Write(json + Environment.NewLine);
+        }
+
+        protected string FormatJson(LoggingEvent e)
         {
             var dic = new Dictionary<string, object>
             {
@@ -40,14 +46,14 @@ namespace JsonLogger
                 ["identity"] = e.Identity,
                 ["location"] = e.LocationInformation.FullInfo,
                 ["pid"] = ProcessId,
-                ["machineName"] = MachineName,
+                ["machineName"] = Environment.MachineName,
                 ["workingSet"] = Environment.WorkingSet,
                 ["osVersion"] = Environment.OSVersion.ToString(),
                 ["is64bitOS"] = Environment.Is64BitOperatingSystem,
                 ["is64bitProcess"] = Environment.Is64BitProcess,
                 ["properties"] = e.GetProperties()
             };
-            writer.Write(JsonConvert.SerializeObject(dic));
+            return JsonConvert.SerializeObject(dic);
         }
     }
 }

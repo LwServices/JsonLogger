@@ -5,6 +5,15 @@ using log4net;
 using log4net.Config;
 using log4net.Repository.Hierarchy;
 
+using System;
+
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
 namespace JsonLogger
 {
     internal class Program
@@ -20,9 +29,9 @@ namespace JsonLogger
             log.Error($"Fehler  {DateTime.Now}");
             log.Fatal($"Game Over {DateTime.Now}");
 
-            var text = File.ReadAllText("JsonFormatLogFile.log");
-            Console.WriteLine(text);
-            Console.ReadKey();
+            var lines = File.ReadAllLines("JsonFormatLogFile.log");
+            var logList = lines.ToList().Select(x => JsonConvert.DeserializeObject<LogItem>(x)).ToList();
+            Debugger.Break();
         }
     }
 }
